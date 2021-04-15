@@ -59,7 +59,6 @@ def handle_dialog(res, req):
             res['response'][
                 'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/f02c9bc2-5a31-426b-919b' \
                          '-695d4058793a.opus"> '
-            res['response']['card']['type'] = 'BigImage'
             res['response']['text'] = 'Cкрашиваю ваше ожидание приятной музыкой.'
         else:
             res['response']['text'] = \
