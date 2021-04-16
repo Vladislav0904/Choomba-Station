@@ -4,7 +4,6 @@ import json
 import random
 import os
 
-
 app = Flask(__name__)
 
 sessionStorage = {}
@@ -51,18 +50,17 @@ def handle_dialog(res, req):
         else:
             sessionStorage[user_id]['first_name'] = first_name
             res['response'][
-                'text'] = 'Приятно познакомиться, ' \
-                          + first_name.title() \
-                          + '. Я - Скиппи.'
+                'text'] = 'Я - Скиппи.'
+    elif 'включи что-нибудь' in req['request']['original_utterance'].lower():
+        res['response'][
+            'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/f02c9bc2-5a31-426b-919b' \
+                     '-695d4058793a.opus"> '
+        res['response']['text'] = 'Cкрашиваю ваше ожидание приятной мелодией.'
     else:
-        if 'включи что-нибудь' in req['request']['original_utterance'].lower():
-            res['response'][
-                'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/f02c9bc2-5a31-426b-919b' \
-                         '-695d4058793a.opus"> '
-            res['response']['text'] = 'Cкрашиваю ваше ожидание приятной музыкой.'
-        else:
-            res['response']['text'] = \
-                'Чумба, ты тупой'
+        res['response']['text'] = 'Чумба, ты совсем ебнутый? Сходи к мозгоправу, попей колесики.'
+        res['response'][
+            'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/0b557e02-c5ba-488a-acea' \
+                     '-4dd6ffc97df4.opus"> '
 
 
 def get_first_name(req):
