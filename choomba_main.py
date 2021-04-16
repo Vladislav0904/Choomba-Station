@@ -10,6 +10,24 @@ sessionStorage = {}
 
 logging.basicConfig(level=logging.INFO)
 
+facts = \
+    {
+        'Любопытный факт: Человеческое тело содержит от 5 до 7 литров крови.':
+            '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/627eef66-548c-45ca-8790-48429fc08925'
+            '.opus">',
+        'Любопытный факт: После отрубания головы, мозг еще несколько минут сохраняет активность.':
+        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/6026210b-65bf-4e9a-a51a-0ff72febeffd'
+        '.opus"> ',
+        'Любопытный факт: Большинство убийств совершается мужчинами - такими, вроде тебя.':
+        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/95034303-2ce3-4dd1-b01a-cd11aa0e9883'
+        '.opus"> ',
+        'Любопытный факт хозяке на заметку! Пятна крови можно легко удалить с помощью уксуса.':
+        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/2b79edb4-4553-4105-8fb0-a058cb25d911'
+        '.opus"> ',
+        'Любопытный факт: согласно традиционным христианским возрениям, вы сгорите в аду.':
+        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/edab618a-c038-4562-94dd-e68847a18fa5.opus">'
+    }
+
 
 @app.route('/post', methods=['POST'])
 def main():
@@ -41,11 +59,19 @@ def handle_dialog(res, req):
             'first_name': None
         }
         return
-    elif 'включи что-нибудь' in req['request']['original_utterance'].lower():
+    elif 'включи что-нибудь' in req['request']['original_utterance'].lower() or 'музык' in req['request'][
+        'original_utterance'].lower() \
+            or 'сыграй' in req['request']['original_utterance'].lower():
         res['response'][
             'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/f02c9bc2-5a31-426b-919b' \
                      '-695d4058793a.opus"> '
         res['response']['text'] = 'Cкрашиваю ваше ожидание приятной мелодией.'
+
+    elif 'скажи' in req['request']['original_utterance'].lower() and\
+            'факт' in req['request']['original_utterance'].lower():
+        name = random.choice(facts.keys())
+        res['response']['text'] = name
+        res['response']['tts'] = facts.get(name)
     else:
         res['response']['text'] = 'Чумба, ты совсем ебнутый? Сходи к мозгоправу, попей колесики. Примечание для себя: ' \
                                   'грубовато, надо как-то перефразировать. '
