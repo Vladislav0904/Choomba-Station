@@ -31,33 +31,24 @@ def handle_dialog(res, req):
 
     # если пользователь новый, то просим его представиться.
     if req['session']['new']:
-        res['response']['text'] = 'Привет, чумба!'
-        # создаем словарь в который в будущем положим имя пользователя
+        res['response'][
+            'text'] = 'Возможная проблема: низкий уровень интеллекта. Скорость речи понижена на треть: Меня зовут ' \
+                      'Скиппи. '
+        res['response'][
+            'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/2ba32bde-f845-47dc-96a3' \
+                     '-77ece3c9fee0.opus"> '
         sessionStorage[user_id] = {
             'first_name': None
         }
         return
-
-    if sessionStorage[user_id]['first_name'] is None:
-        # в последнем его сообщение ищем имя.
-        first_name = get_first_name(req)
-        # если не нашли, то сообщаем пользователю что не расслышали.
-        if first_name is None:
-            res['response']['text'] = \
-                'Не расслышала имя. Повтори, пожалуйста!'
-        # если нашли, то приветствуем пользователя.
-        # И спрашиваем какой город он хочет увидеть.
-        else:
-            sessionStorage[user_id]['first_name'] = first_name
-            res['response'][
-                'text'] = 'Я - Скиппи.'
     elif 'включи что-нибудь' in req['request']['original_utterance'].lower():
         res['response'][
             'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/f02c9bc2-5a31-426b-919b' \
                      '-695d4058793a.opus"> '
         res['response']['text'] = 'Cкрашиваю ваше ожидание приятной мелодией.'
     else:
-        res['response']['text'] = 'Чумба, ты совсем ебнутый? Сходи к мозгоправу, попей колесики.'
+        res['response']['text'] = 'Чумба, ты совсем ебнутый? Сходи к мозгоправу, попей колесики. Примечание для себя: ' \
+                                  'грубовато, надо как-то перефразировать. '
         res['response'][
             'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/0b557e02-c5ba-488a-acea' \
                      '-4dd6ffc97df4.opus"> '
