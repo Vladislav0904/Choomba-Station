@@ -69,7 +69,7 @@ def handle_dialog(res, req):
 
     elif 'скажи' in req['request']['original_utterance'].lower() and\
             'факт' in req['request']['original_utterance'].lower():
-        name = random.choice(facts.keys())
+        name = random.choice(list(facts.keys()))
         res['response']['text'] = name
         res['response']['tts'] = facts.get(name)
     else:
