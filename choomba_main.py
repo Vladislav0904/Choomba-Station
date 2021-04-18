@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 sessionStorage = {}
-
+joke = False
 logging.basicConfig(level=logging.INFO)
 
 facts = \
@@ -40,12 +40,12 @@ def main():
             'end_session': False
         }
     }
-    handle_dialog(response, request.json)
+    handle_dialog(response, request.json, joke)
     logging.info(f'Response: {response!r}')
     return json.dumps(response)
 
 
-def handle_dialog(res, req):
+def handle_dialog(res, req, joke):
     user_id = req['session']['user_id']
     if req['session']['new']:
         res['response'][
@@ -82,9 +82,11 @@ def handle_dialog(res, req):
     elif 'расскажи что-нибудь' in req['request']['original_utterance'].lower():
         res['response']['text'] = 'Приветствую Пользователь! Я подготовил для вас статистику. Скажите что-нибудь для ' \
                                   'продолжения. '
-        if 'что-нибудь' in req['request']['original_utterance'].lower():
-            res['response'][
-                'text'] = 'Кажется, вы пытались пошутить. Автоматический ответ: ха-ха-ха. Впервые слышу эту шутку.'
+        joke = True
+    elif 'что-нибудь' in req['request']['original_utterance'].lower() and joke:
+        res['response'][
+            'text'] = 'Кажется, вы пытались пошутить. Автоматический ответ: ха-ха-ха. Впервые слышу эту шутку.'
+        joke = False
     else:
         res['response']['text'] = 'Чумба, ты совсем ебнутый? Сходи к мозгоправу, попей колесики. Примечание для себя: ' \
                                   'грубовато, надо как-то перефразировать. '
