@@ -16,16 +16,17 @@ facts = \
             '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/627eef66-548c-45ca-8790-48429fc08925'
             '.opus">',
         'Любопытный факт: После отрубания головы, мозг еще несколько минут сохраняет активность.':
-        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/6026210b-65bf-4e9a-a51a-0ff72febeffd'
-        '.opus"> ',
+            '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/6026210b-65bf-4e9a-a51a-0ff72febeffd'
+            '.opus"> ',
         'Любопытный факт: Большинство убийств совершается мужчинами - такими, вроде тебя.':
-        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/95034303-2ce3-4dd1-b01a-cd11aa0e9883'
-        '.opus"> ',
-        'Любопытный факт хозяке на заметку! Пятна крови можно легко удалить с помощью уксуса.':
-        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/2b79edb4-4553-4105-8fb0-a058cb25d911'
-        '.opus"> ',
-        'Любопытный факт: согласно традиционным христианским возрениям, вы сгорите в аду.':
-        '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/edab618a-c038-4562-94dd-e68847a18fa5.opus">'
+            '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/95034303-2ce3-4dd1-b01a-cd11aa0e9883'
+            '.opus"> ',
+        'Любопытный факт хозяйке на заметку! Пятна крови можно легко удалить с помощью уксуса.':
+            '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/2b79edb4-4553-4105-8fb0-a058cb25d911'
+            '.opus"> ',
+        'Любопытный факт: согласно традиционным христианским воззрениям, вы сгорите в аду.':
+            '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/edab618a-c038-4562-94dd-e68847a18fa5'
+            '.opus"> '
     }
 
 
@@ -46,19 +47,26 @@ def main():
 
 def handle_dialog(res, req):
     user_id = req['session']['user_id']
-
-    # если пользователь новый, то просим его представиться.
     if req['session']['new']:
+        res['response'][
+            'text'] = 'Добро пожаловать в Чумба.Станцию. Ваш новый помощник Скиппи умеет рассказывать некоторые ' \
+                      'факты, играть свою музыку, а также немного общаться с вами. '
+        sessionStorage[user_id] = {
+            'first_name': None
+        }
+        return
+    elif 'тебя зовут' in req['request']['original_utterance'].lower():
         res['response'][
             'text'] = 'Возможная проблема: низкий уровень интеллекта. Скорость речи понижена на треть: Меня зовут ' \
                       'Скиппи. '
         res['response'][
             'tts'] = '<speaker audio="dialogs-upload/f0b2392a-f08b-404f-af1a-c0109eab8a69/2ba32bde-f845-47dc-96a3' \
                      '-77ece3c9fee0.opus"> '
-        sessionStorage[user_id] = {
-            'first_name': None
-        }
-        return
+    elif 'помощь' in req['request']['original_utterance'].lower() or 'что ты умеешь' in req['request'][
+        'original_utterance'].lower():
+        res['response'][
+            'text'] = 'Скиппи может рассказать вам интересные факты "расскажи факт", играть музыку "включи ' \
+                      'что-нибудь" и немного общаться с вами '
     elif 'включи что-нибудь' in req['request']['original_utterance'].lower() or 'музык' in req['request'][
         'original_utterance'].lower() \
             or 'сыграй' in req['request']['original_utterance'].lower():
@@ -67,11 +75,16 @@ def handle_dialog(res, req):
                      '-695d4058793a.opus"> '
         res['response']['text'] = 'Cкрашиваю ваше ожидание приятной мелодией.'
 
-    elif 'скажи' in req['request']['original_utterance'].lower() and\
-            'факт' in req['request']['original_utterance'].lower():
+    elif 'факт' in req['request']['original_utterance'].lower():
         name = random.choice(list(facts.keys()))
         res['response']['text'] = name
         res['response']['tts'] = facts.get(name)
+    elif 'расскажи что-нибудь' in req['request']['original_utterance'].lower():
+        res['response']['text'] = 'Приветствую Пользователь! Я подготовил для вас статистику. Скажите что-нибудь для ' \
+                                  'продолжения. '
+        if 'что-нибудь' in req['request']['original_utterance'].lower():
+            res['response'][
+                'text'] = 'Кажется, вы пытались пошутить. Автоматический ответ: ха-ха-ха. Впервые слышу эту шутку.'
     else:
         res['response']['text'] = 'Чумба, ты совсем ебнутый? Сходи к мозгоправу, попей колесики. Примечание для себя: ' \
                                   'грубовато, надо как-то перефразировать. '
