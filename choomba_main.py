@@ -7,6 +7,7 @@ import os
 app = Flask(__name__)
 
 sessionStorage = {}
+global joke
 joke = False
 logging.basicConfig(level=logging.INFO)
 
