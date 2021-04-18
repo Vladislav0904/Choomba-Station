@@ -7,8 +7,6 @@ import os
 app = Flask(__name__)
 
 sessionStorage = {}
-global joke
-joke = False
 logging.basicConfig(level=logging.INFO)
 
 facts = \
@@ -41,12 +39,13 @@ def main():
             'end_session': False
         }
     }
-    handle_dialog(response, request.json, joke)
+    handle_dialog(response, request.json)
     logging.info(f'Response: {response!r}')
     return json.dumps(response)
 
 
-def handle_dialog(res, req, joke):
+def handle_dialog(res, req):
+    joke = False
     user_id = req['session']['user_id']
     if req['session']['new']:
         res['response'][
